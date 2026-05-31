@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Quiz — 198 Questions</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161920;
+    --card: #1c2030;
+    --border: #2a2f3e;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --green: #43e97b;
+    --red: #ff6584;
+    --text: #e8eaf0;
+    --muted: #7a809a;
+    --radius: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background decoration */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(108,99,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; left: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,101,132,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ========== START SCREEN ========== */
+  #start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-size: 13px;
+    color: #a8a2ff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    font-weight: 600;
+  }
+
+  #start-screen h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, #fff 0%, #a8a2ff 50%, #ff6584 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  #start-screen p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat-pill {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .stat-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .dot-accent { background: var(--accent); }
+  .dot-green { background: var(--green); }
+  .dot-pink { background: var(--accent2); }
+
+  .settings-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    max-width: 440px;
+    width: 100%;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .settings-card label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0.8rem;
+  }
+
+  .mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 1.2rem;
+  }
+
+  .mode-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 8px;
+    color: var(--muted);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .mode-btn.active {
+    background: rgba(108,99,255,0.15);
+    border-color: var(--accent);
+    color: #a8a2ff;
+  }
+
+  .mode-btn:hover:not(.active) {
+    border-color: rgba(108,99,255,0.4);
+    color: var(--text);
+  }
+
+  .start-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 16px 48px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+  }
+
+  .start-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.4s;
+  }
+
+  .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(108,99,255,0.4); }
+  .start-btn:hover::before { left: 100%; }
+  .start-btn:active { transform: translateY(0); }
+
+  /* ========== QUIZ SCREEN ========== */
+  #quiz-screen {
+    display: none;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  .quiz-header {
+    position: sticky;
+    top: 0;
+    background: rgba(13,15,20,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 100;
+  }
+
+  .q-counter {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+
+  .q-counter span { color: var(--text); }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 4px;
+    transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .score-badge {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 8px;
+    padding: 4px 12px;
+    white-space: nowrap;
+    color: #a8a2ff;
+  }
+
+  .quiz-body {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    animation: slideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .q-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .q-text {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: var(--text);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    width: 100%;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: rgba(108,99,255,0.08);
+    border-color: rgba(108,99,255,0.5);
+    transform: translateX(4px);
+  }
+
+  .option-letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+    transition: all 0.18s;
+  }
+
+  .option-btn.selected {
+    background: rgba(108,99,255,0.12);
+    border-color: var(--accent);
+  }
+  .option-btn.selected .option-letter {
+    background: var(--accent);
+    color: white;
+  }
+
+  .option-btn.correct {
+    background: rgba(67,233,123,0.1);
+    border-color: var(--green);
+  }
+  .option-btn.correct .option-letter {
+    background: var(--green);
+    color: #0d1a0f;
+  }
+
+  .option-btn.wrong {
+    background: rgba(255,101,132,0.1);
+    border-color: var(--red);
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--red);
+    color: white;
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-btn {
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+  }
+
+  .nav-btn:hover { border-color: var(--accent); color: var(--text); }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .next-btn {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    padding: 12px 32px;
+  }
+  .next-btn:hover { background: #7c74ff; box-shadow: 0 4px 20px rgba(108,99,255,0.35); }
+  .next-btn:disabled { background: var(--border); border-color: var(--border); box-shadow: none; }
+
+  .feedback-toast {
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    display: none;
+    animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .feedback-toast.correct-fb { background: rgba(67,233,123,0.12); color: var(--green); border: 1px solid rgba(67,233,123,0.2); display: block; }
+  .feedback-toast.wrong-fb { background: rgba(255,101,132,0.12); color: var(--red); border: 1px solid rgba(255,101,132,0.2); display: block; }
+
+  /* ========== RESULTS SCREEN ========== */
+  #results-screen {
+    display: none;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .results-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    max-width: 520px;
+    width: 100%;
+  }
+
+  .score-ring {
+    width: 140px; height: 140px;
+    margin: 0 auto 2rem;
+    position: relative;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+
+  .score-ring-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .score-pct {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .score-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .results-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .results-sub { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+
+  .results-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .res-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 0.5rem;
+  }
+
+  .res-stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .res-stat-num.green { color: var(--green); }
+  .res-stat-num.red { color: var(--red); }
+  .res-stat-num.accent { color: var(--accent); }
+
+  .res-stat-lbl { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .action-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  .action-btn {
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .btn-primary { background: var(--accent); color: white; border: none; }
+  .btn-primary:hover { background: #7c74ff; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ========== QUIZ NAVIGATOR ========== */
+  .q-nav-wrap {
+    margin-top: 1.5rem;
+  }
+  .q-nav-title {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 0.8rem;
+  }
+  .q-nav-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .q-dot {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+  }
+  .q-dot:hover { border-color: var(--accent); color: var(--text); }
+  .q-dot.answered { background: rgba(108,99,255,0.15); border-color: var(--accent); color: #a8a2ff; }
+  .q-dot.current { background: var(--accent); border-color: var(--accent); color: white; }
+  .q-dot.correct-dot { background: rgba(67,233,123,0.15); border-color: var(--green); color: var(--green); }
+  .q-dot.wrong-dot { background: rgba(255,101,132,0.15); border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+
+<!-- ========== START ========== -->
+<div id="start-screen">
+  <div class="logo-badge">🎯 English Quiz</div>
+  <h1>Test Your<br>English Skills</h1>
+  <p>198 questions covering grammar, vocabulary, e-commerce, cultural topics, conditionals, reported speech, and more.</p>
+
+  <div class="stats-row">
+    <div class="stat-pill"><span class="dot dot-accent"></span> 198 Questions</div>
+    <div class="stat-pill"><span class="dot dot-green"></span> Multiple Choice</div>
+    <div class="stat-pill"><span class="dot dot-pink"></span> Instant Feedback</div>
+  </div>
+
+  <div class="settings-card">
+    <label>Quiz Mode</label>
+    <div class="mode-buttons">
+      <button class="mode-btn active" onclick="setMode('all', this)">All 198</button>
+      <button class="mode-btn" onclick="setMode('random50', this)">Random 50</button>
+      <button class="mode-btn" onclick="setMode('random20', this)">Quick 20</button>
+    </div>
+    <label>Answer Style</label>
+    <div class="mode-buttons" style="grid-template-columns: 1fr 1fr;">
+      <button class="mode-btn active" id="fb-btn-instant" onclick="setFeedback('instant', this)">Instant</button>
+      <button class="mode-btn" id="fb-btn-end" onclick="setFeedback('end', this)">At End</button>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startQuiz()">Start Quiz →</button>
+</div>
+
+<!-- ========== QUIZ ========== -->
+<div id="quiz-screen">
+  <div class="quiz-header">
+    <div class="q-counter">Q<span id="qcurrent">1</span> / <span id="qtotal">198</span></div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <div class="score-badge" id="score-display">Score: 0</div>
+  </div>
+
+  <div class="quiz-body">
+    <div class="question-card" id="question-card">
+      <div class="q-label" id="q-label">Question 1</div>
+      <div class="q-text" id="q-text"></div>
+    </div>
+
+    <div class="feedback-toast" id="feedback-toast"></div>
+
+    <div class="options-grid" id="options-grid"></div>
+
+    <div style="height: 1.5rem"></div>
+
+    <div class="nav-row">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">← Prev</button>
+      <button class="nav-btn next-btn" id="next-btn" onclick="navigate(1)" disabled>Next →</button>
+    </div>
+
+    <div class="q-nav-wrap">
+      <div class="q-nav-title">Question Navigator</div>
+      <div class="q-nav-grid" id="q-nav-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== RESULTS ========== -->
+<div id="results-screen">
+  <div class="results-card">
+    <div class="score-ring">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="58" fill="none" stroke="#2a2f3e" stroke-width="10"/>
+        <circle cx="70" cy="70" r="58" fill="none" stroke="url(#scoreGrad)" stroke-width="10"
+          stroke-linecap="round" stroke-dasharray="364.4" id="score-circle" stroke-dashoffset="364.4"/>
+        <defs>
+          <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6c63ff"/>
+            <stop offset="100%" stop-color="#43e97b"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="score-ring-text">
+        <div class="score-pct" id="final-pct">0%</div>
+        <div class="score-lbl">Score</div>
+      </div>
+    </div>
+
+    <div class="results-title" id="results-title">Well Done!</div>
+    <div class="results-sub" id="results-sub">Here's how you did:</div>
+
+    <div class="results-stats">
+      <div class="res-stat">
+        <div class="res-stat-num green" id="r-correct">0</div>
+        <div class="res-stat-lbl">Correct</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-stat-num red" id="r-wrong">0</div>
+        <div class="res-stat-lbl">Wrong</div>
+      </div>
+      <div class="res-stat">
+        <div class="res-stat-num accent" id="r-skipped">0</div>
+        <div class="res-stat-lbl">Skipped</div>
+      </div>
+    </div>
+
+    <div class="action-btns">
+      <button class="action-btn btn-primary" onclick="restartQuiz()">Try Again</button>
+      <button class="action-btn btn-outline" onclick="reviewWrong()">Review Wrong</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const ALL_QUESTIONS = [{"num": 1, "question": "What is e-commerce?", "options": [{"letter": "A", "text": "Buying and selling products online"}, {"letter": "B", "text": "Shopping in a mall"}, {"letter": "C", "text": "Selling only to businesses"}, {"letter": "D", "text": "A type of marketing"}]}, {"num": 2, "question": "What happens during checkout?", "options": [{"letter": "A", "text": "Customers leave the store"}, {"letter": "B", "text": "Customers enter payment and shipping details"}, {"letter": "C", "text": "Customers add items to their cart"}, {"letter": "D", "text": "The store restocks its products"}]}, {"num": 3, "question": "What does \"cart abandonment\" mean?", "options": [{"letter": "A", "text": "Removing items from a cart before checkout"}, {"letter": "B", "text": "Buying products in bulk"}, {"letter": "C", "text": "Leaving items in the cart without buying"}, {"letter": "D", "text": "Returning purchased items"}]}, {"num": 4, "question": "What is an example of an online marketplace?", "options": [{"letter": "A", "text": "Amazon"}, {"letter": "B", "text": "A small bakery"}, {"letter": "C", "text": "A local grocery store"}, {"letter": "D", "text": "A coffee shop"}]}, {"num": 5, "question": "What does a payment gateway do?", "options": [{"letter": "A", "text": "Stores products in a warehouse"}, {"letter": "B", "text": "Delivers orders to customers"}, {"letter": "C", "text": "Helps process online payments"}, {"letter": "D", "text": "Advertises new products"}]}, {"num": 6, "question": "Yesterday at 5 PM, I ______ TV", "options": [{"letter": "A", "text": "was watching"}, {"letter": "B", "text": "Watched"}, {"letter": "C", "text": "Watch"}, {"letter": "D", "text": "am watching"}]}, {"num": 7, "question": "Which sentence is correct?", "options": [{"letter": "A", "text": "They was playing football."}, {"letter": "B", "text": "They were playing football."}, {"letter": "C", "text": "They play football."}, {"letter": "D", "text": "They playing football."}]}, {"num": 8, "question": "She ______ her homework when I called.", "options": [{"letter": "A", "text": "wasn’t doing"}, {"letter": "B", "text": "weren’t doing"}, {"letter": "B", "text": "don’t doing"}, {"letter": "D", "text": "not doing"}]}, {"num": 9, "question": "I ______ when the phone rang.", "options": [{"letter": "A", "text": "was sleeping"}, {"letter": "B", "text": "Slept"}, {"letter": "C", "text": "Sleep"}, {"letter": "D", "text": "is sleeping"}]}, {"num": 10, "question": "While she ______, I ______ a book.", "options": [{"letter": "A", "text": "was cooking / was reading"}, {"letter": "B", "text": "cooked / read"}, {"letter": "C", "text": "cooking / reading"}, {"letter": "D", "text": "was cooked / read"}]}, {"num": 11, "question": "Where do you buy medicine?", "options": [{"letter": "A", "text": "Supermarket"}, {"letter": "B", "text": "Bookstore"}, {"letter": "C", "text": "Pharmacy"}, {"letter": "D", "text": "Bakery"}]}, {"num": 12, "question": "What do you get after paying for your items?", "options": [{"letter": "A", "text": "Receipt"}, {"letter": "B", "text": "Queue"}, {"letter": "C", "text": "Cart"}, {"letter": "D", "text": "Discount"}]}, {"num": 13, "question": "What do you call looking at items without buying them?", "options": [{"letter": "A", "text": "Shopping"}, {"letter": "B", "text": "Window shopping"}, {"letter": "C", "text": "Browsing"}, {"letter": "D", "text": "Returning"}]}, {"num": 14, "question": "If an item has a discount, what does it mean?", "options": [{"letter": "A", "text": "The price is higher"}, {"letter": "B", "text": "The price is lower"}, {"letter": "C", "text": "The price is the same"}, {"letter": "D", "text": "The item is free"}]}, {"num": 15, "question": "What is the place where you pay in a store?", "options": [{"letter": "A", "text": "Checkout"}, {"letter": "B", "text": "Shelf"}, {"letter": "C", "text": "Aisle"}, {"letter": "D", "text": "Queue"}]}, {"num": 16, "question": "_______ do you usually go shopping?", "options": [{"letter": "A", "text": "Who"}, {"letter": "B", "text": "Whom"}, {"letter": "C", "text": "Whe"}, {"letter": "D", "text": "What"}]}, {"num": 17, "question": "_______ is your favorite store?", "options": [{"letter": "A", "text": "How old"}, {"letter": "B", "text": "What"}, {"letter": "C", "text": "Who"}, {"letter": "D", "text": "How"}]}, {"num": 18, "question": "_______ do you buy your groceries?", "options": [{"letter": "A", "text": "Which"}, {"letter": "B", "text": "How"}, {"letter": "C", "text": "Where"}, {"letter": "D", "text": "What"}]}, {"num": 19, "question": "Do you like shopping?", "options": [{"letter": "A", "text": "Yes, I do."}, {"letter": "B", "text": "No, I am."}, {"letter": "C", "text": "Yes, I am."}, {"letter": "D", "text": "No, I like."}]}, {"num": 20, "question": "Is the mall open on Sundays?", "options": [{"letter": "A", "text": "Yes, it does."}, {"letter": "B", "text": "No, it is."}, {"letter": "C", "text": "Yes, it is."}, {"letter": "D", "text": "No, it doesn’t"}]}, {"num": 21, "question": "What is a festival?", "options": [{"letter": "A", "text": "A type of food"}, {"letter": "B", "text": "A celebration or event"}, {"letter": "C", "text": "A kind of job"}, {"letter": "D", "text": "A place to buy things"}]}, {"num": 22, "question": "Why are cultural traditions important?", "options": [{"letter": "A", "text": "They help us make money"}, {"letter": "B", "text": "They help us celebrate and remember history"}, {"letter": "C", "text": "They make us work harder"}, {"letter": "D", "text": "They teach us new skills"}]}, {"num": 23, "question": "Which of these is a cultural tradition in many countries?", "options": [{"letter": "A", "text": "Watching movies"}, {"letter": "B", "text": "Cooking special foods"}, {"letter": "C", "text": "Playing video games"}, {"letter": "D", "text": "Using a smartphone"}]}, {"num": 24, "question": "What does the Cherry Blossom Festival in Japan celebrate?", "options": [{"letter": "A", "text": "Summer"}, {"letter": "B", "text": "The arrival of spring"}, {"letter": "C", "text": "Christmas"}, {"letter": "D", "text": "The harvest"}]}, {"num": 25, "question": "What is Diwali?", "options": [{"letter": "A", "text": "A dance festival"}, {"letter": "B", "text": "A holiday for lighting lamps and celebrating good over evil"}, {"letter": "C", "text": "A food festival"}, {"letter": "D", "text": "A sports competition"}]}, {"num": 26, "question": "What is cultural heritage?", "options": [{"letter": "A", "text": "New technology"}, {"letter": "B", "text": "Traditions and customs passed down from ancestors"}, {"letter": "C", "text": "Things we buy"}, {"letter": "D", "text": "Popular TV shows"}]}, {"num": 27, "question": "Which of these is an example of cultural diversity?", "options": [{"letter": "A", "text": "Everyone having the same traditions"}, {"letter": "B", "text": "Different people celebrating different holidays"}, {"letter": "C", "text": "Everyone eating the same food"}, {"letter": "D", "text": "Only one language spoken in a country"}]}, {"num": 28, "question": "What does cultural understanding help people do?", "options": [{"letter": "A", "text": "Forget their own traditions"}, {"letter": "B", "text": "Understand and respect different cultures"}, {"letter": "C", "text": "Avoid talking to others"}, {"letter": "D", "text": "Work only with people from the same culture"}]}, {"num": 29, "question": "Which of the following is part of a culture?", "options": [{"letter": "A", "text": "Your favorite sport"}, {"letter": "B", "text": "Your favorite color"}, {"letter": "C", "text": "Music, food, and traditions"}, {"letter": "D", "text": "Your job"}]}, {"num": 30, "question": "Why is it important to celebrate festivals?", "options": [{"letter": "A", "text": "To spend money"}, {"letter": "B", "text": "To have fun and connect with others"}, {"letter": "C", "text": "To work harder"}, {"letter": "D", "text": "To buy new things"}]}, {"num": 31, "question": "You _______ wear a helmet when riding a bike.", "options": [{"letter": "A", "text": "Must"}, {"letter": "B", "text": "Can"}, {"letter": "C", "text": "Might"}, {"letter": "D", "text": "Should"}]}, {"num": 32, "question": "You _______ go to the party if you don’t want to.", "options": [{"letter": "A", "text": "Must"}, {"letter": "B", "text": "Should"}, {"letter": "C", "text": "don’t have to"}, {"letter": "D", "text": "have to"}]}, {"num": 33, "question": "She _______ do her homework before she goes out.", "options": [{"letter": "A", "text": "Must"}, {"letter": "B", "text": "Should"}, {"letter": "C", "text": "May"}, {"letter": "D", "text": "Might"}]}, {"num": 34, "question": "We _______ be quiet during the meeting.", "options": [{"letter": "A", "text": "Must"}, {"letter": "B", "text": "Can"}, {"letter": "C", "text": "Might"}, {"letter": "D", "text": "Should"}]}, {"num": 35, "question": "You _______ talk during the exam.", "options": [{"letter": "A", "text": "mustn’t"}, {"letter": "B", "text": "Should"}, {"letter": "C", "text": "Can"}, {"letter": "D", "text": "Might"}]}, {"num": 36, "question": "There are __________ students in the classroom today.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "A little"}, {"letter": "D", "text": "Little"}]}, {"num": 37, "question": "We have not __________ time to finish the project.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "Few"}, {"letter": "D", "text": "Little"}]}, {"num": 38, "question": "There are __________ apples left in the basket.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "A little"}, {"letter": "D", "text": "Little"}]}, {"num": 39, "question": "I have not __________ money in my wallet.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "Few"}, {"letter": "D", "text": "Little"}]}, {"num": 40, "question": "He has __________ friends in his new school.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "A little"}, {"letter": "D", "text": "Little"}]}, {"num": 41, "question": "Choose the correct answer. We __ (play) football while it __ (rain).", "options": [{"letter": "A", "text": "were playing/was raining"}, {"letter": "B", "text": "were playing/raining"}, {"letter": "C", "text": "were playing/were raining"}, {"letter": "D", "text": "were playing/rained"}]}, {"num": 42, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "were doing you"}, {"letter": "B", "text": "Was you doing"}, {"letter": "C", "text": "Were you doing"}, {"letter": "D", "text": "Were you do"}]}, {"num": 43, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "Was/get"}, {"letter": "B", "text": "Was/got"}, {"letter": "C", "text": "Were/got"}, {"letter": "D", "text": "Was/gets"}]}, {"num": 44, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "she was study at 10 p.m. last night."}, {"letter": "B", "text": "Was studying she at 10 p.m. last night."}, {"letter": "C", "text": "She was studying at 10 p.m. last night."}, {"letter": "D", "text": "She were studying at 10 p.m. last night."}]}, {"num": 45, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "is she?"}, {"letter": "B", "text": "Are she?"}, {"letter": "C", "text": "Is he?"}, {"letter": "D", "text": "Isn’t she?"}]}, {"num": 46, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "like he?"}, {"letter": "B", "text": "Does he?"}, {"letter": "C", "text": "Doesn’t he?"}, {"letter": "D", "text": "Don’t he?"}]}, {"num": 47, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "hasn’t she?"}, {"letter": "B", "text": "Haven’t she?"}, {"letter": "C", "text": "Has she?"}, {"letter": "D", "text": "Have she?"}]}, {"num": 48, "question": "Find the definition of Bargain?", "options": [{"letter": "A", "text": "The money returned to you if you return an item."}, {"letter": "B", "text": "A promise to repair or replace a product if it is faulty."}, {"letter": "C", "text": "Goods available for sale in a shop."}, {"letter": "D", "text": "A person or company that sells goods to the public."}]}, {"num": 49, "question": "Find the definition of Receipt?", "options": [{"letter": "A", "text": "A written proof of purchase."}, {"letter": "B", "text": "A very good deal or low price."}, {"letter": "C", "text": "The money returned to you if you return an item."}, {"letter": "D", "text": "Goods available for sale in a shop."}]}, {"num": 50, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "you did what do yesterday?"}, {"letter": "B", "text": "What do you did yesterday?"}, {"letter": "C", "text": "What you did yesterday do?"}, {"letter": "D", "text": "What did you do yesterday?"}]}, {"num": 51, "question": "Choose the correct answer. There’s a rule that says we can’t park here. We ___ park here.", "options": [{"letter": "A", "text": "Must"}, {"letter": "B", "text": "Should"}, {"letter": "C", "text": "Have to"}, {"letter": "D", "text": "Mustn’t"}]}, {"num": 52, "question": "Find the closing of formal letter.", "options": [{"letter": "A", "text": "best wishes"}, {"letter": "B", "text": "Yours sincerely"}, {"letter": "C", "text": "Love"}, {"letter": "D", "text": "Best regards"}]}, {"num": 53, "question": "Find the opening of formal letter.", "options": [{"letter": "A", "text": "Dear Sir/Madam"}, {"letter": "B", "text": "Hi Sarah"}, {"letter": "C", "text": "Sir/Madam"}, {"letter": "D", "text": "Hello"}]}, {"num": 54, "question": "Find the opening phrase of formal letter.", "options": [{"letter": "A", "text": "I am writing to…"}, {"letter": "B", "text": "Please be advised that.."}, {"letter": "C", "text": "Thank you for your understanding and cooperation…"}, {"letter": "D", "text": "I look forward to your prompt response."}]}, {"num": 55, "question": "Find the definition of Digital divide?", "options": [{"letter": "A", "text": "A gap between people who have access to technology and those who don’t."}, {"letter": "B", "text": "Transformed in a dramatic way."}, {"letter": "C", "text": "The state of being connected or linked together."}, {"letter": "D", "text": "The right to keep personal information secure and not shared without consent."}]}, {"num": 57, "question": "Find the definition of Privacy?", "options": [{"letter": "A", "text": "A gap between people who have access to technology and those who don’t."}, {"letter": "B", "text": "Transformed in a dramatic way."}, {"letter": "C", "text": "The state of being connected or linked together."}, {"letter": "D", "text": "The right to keep personal information secure and not shared without consent."}]}, {"num": 58, "question": "Find the definition of  Revolutionized?", "options": [{"letter": "A", "text": "A gap between people who have access to technology and those who don’t."}, {"letter": "B", "text": "Transformed in a dramatic way."}, {"letter": "C", "text": "The state of being connected or linked together."}, {"letter": "D", "text": "The right to keep personal information secure and not shared without consent."}]}, {"num": 59, "question": "Find the correct key words of Present Perfect Tense?", "options": [{"letter": "A", "text": "Already, yet, just, now"}, {"letter": "B", "text": "ever, never, recently, at the moment"}, {"letter": "C", "text": "so far, since, for, sometimes"}, {"letter": "D", "text": "Already, yet, just, recently"}]}, {"num": 60, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "Had readed"}, {"letter": "B", "text": "Has readed"}, {"letter": "C", "text": "Has read"}, {"letter": "D", "text": "Have read"}]}, {"num": 61, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "had live"}, {"letter": "B", "text": "Has lived"}, {"letter": "C", "text": "Have lived"}, {"letter": "D", "text": "Have live"}]}, {"num": 62, "question": "Find the correct ending.", "options": [{"letter": "A", "text": "eaten her lunch."}, {"letter": "B", "text": "in this city for a long time."}, {"letter": "C", "text": "to the USA before?"}, {"letter": "D", "text": "called us today."}]}, {"num": 63, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "in this city for a long time."}, {"letter": "B", "text": "to the USA before?"}, {"letter": "C", "text": "called us today."}, {"letter": "D", "text": "finished their project."}]}, {"num": 64, "question": "Find the definition of Fossil fuels?", "options": [{"letter": "A", "text": "Energy sources like coal and oil"}, {"letter": "B", "text": "Morally right or wrong"}, {"letter": "C", "text": "A new idea or invention"}, {"letter": "D", "text": "Energy sources that can be replenished naturally"}]}, {"num": 65, "question": "Find the definition of Paralysis?", "options": [{"letter": "A", "text": "Morally right or wrong"}, {"letter": "B", "text": "A new idea or invention"}, {"letter": "C", "text": "Energy sources that can be replenished naturally"}, {"letter": "D", "text": "Loss of movement in part of the body"}]}, {"num": 66, "question": "Find the definition of Renewable?", "options": [{"letter": "A", "text": "Morally right or wrong"}, {"letter": "B", "text": "A new idea or invention"}, {"letter": "C", "text": "Energy sources that can be replenished naturally"}, {"letter": "D", "text": "Loss of movement in part of the body"}]}, {"num": 67, "question": "Find the definition of Innovation?", "options": [{"letter": "A", "text": "Morally right or wrong"}, {"letter": "B", "text": "A new idea or invention"}, {"letter": "C", "text": "Energy sources that can be replenished naturally"}, {"letter": "D", "text": "Loss of movement in part of the body"}]}, {"num": 68, "question": "Find the definition of Breakthrough?", "options": [{"letter": "A", "text": "Energy sources that can be replenished naturally"}, {"letter": "B", "text": "A remarkable or significant development or discovery"}, {"letter": "C", "text": "Morally right or acceptable"}, {"letter": "D", "text": "Protection of computer systems and networks from attacks"}]}, {"num": 69, "question": "Find the definition of Cybersecurity?", "options": [{"letter": "A", "text": "A remarkable or significant development or discovery"}, {"letter": "B", "text": "Morally right or acceptable"}, {"letter": "C", "text": "Protection of computer systems and networks from attacks"}, {"letter": "D", "text": "Something extraordinary or impressive that happens"}]}, {"num": 70, "question": "Find the definition of Phenomenon?", "options": [{"letter": "A", "text": "A remarkable or significant development or discovery"}, {"letter": "B", "text": "Protection of computer systems and networks from attacks"}, {"letter": "C", "text": "Something extraordinary or impressive that happens"}, {"letter": "D", "text": "Morally right or acceptable"}]}, {"num": 71, "question": "Find the definition of Ethical?", "options": [{"letter": "A", "text": "Energy sources that can be replenished naturally"}, {"letter": "B", "text": "A remarkable or significant development or discovery"}, {"letter": "C", "text": "Morally right or acceptabl"}, {"letter": "D", "text": "Protection of computer systems and networks from attacks"}]}, {"num": 72, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "has not finished"}, {"letter": "B", "text": "Have finished"}, {"letter": "C", "text": "Have not finished"}, {"letter": "D", "text": "Has finished"}]}, {"num": 73, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "has not start"}, {"letter": "B", "text": "Has not started"}, {"letter": "C", "text": "Have not started"}, {"letter": "D", "text": "Have start"}]}, {"num": 74, "question": "Find the correct negative form of Present Perfect Tense.", "options": [{"letter": "A", "text": "I have already cleaned the room."}, {"letter": "B", "text": "She has not washed the dishes yet."}, {"letter": "C", "text": "They have gone to the restaurant."}, {"letter": "D", "text": "I have been to the Paris."}]}, {"num": 75, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "Few"}, {"letter": "B", "text": "Little"}, {"letter": "C", "text": "Much"}, {"letter": "D", "text": "Many"}]}, {"num": 76, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "Many"}, {"letter": "B", "text": "Little"}, {"letter": "C", "text": "Much"}, {"letter": "D", "text": "Few"}]}, {"num": 77, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "Little"}, {"letter": "D", "text": "Few"}]}, {"num": 78, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "Much"}, {"letter": "B", "text": "Many"}, {"letter": "C", "text": "Little"}, {"letter": "D", "text": "a little"}]}, {"num": 79, "question": "Find the correct answer.", "options": [{"letter": "A", "text": "Must"}, {"letter": "B", "text": "Have to"}, {"letter": "C", "text": "Should"}, {"letter": "D", "text": "Ought to"}]}, {"num": 80, "question": "Find the definition of Refund?", "options": [{"letter": "A", "text": "The money returned to you if you return an item."}, {"letter": "B", "text": "A promise to repair or replace a product if it is faulty."}, {"letter": "C", "text": "The area in a store where you pay for your items."}, {"letter": "D", "text": "A reduction in price."}]}, {"num": 81, "question": "Find the definition of Checkout?", "options": [{"letter": "A", "text": "The money returned to you if you return an item."}, {"letter": "B", "text": "A promise to repair or replace a product if it is faulty."}, {"letter": "C", "text": "The area in a store where you pay for your items."}, {"letter": "D", "text": "A reduction in price."}]}, {"num": 82, "question": "Fill in the blanks. By the time I got to the party, they __________ (already, leave).", "options": [{"letter": "A", "text": "already left"}, {"letter": "B", "text": "had already left"}, {"letter": "C", "text": "had already been leaving"}, {"letter": "D", "text": "had leave"}]}, {"num": 83, "question": "Fill in the blanks . When we arrived, the movie __________ (already, start).", "options": [{"letter": "A", "text": "has already started"}, {"letter": "B", "text": "had already started"}, {"letter": "C", "text": "already started"}, {"letter": "D", "text": "started already"}]}, {"num": 84, "question": "Fill in the blanks. She __________ (never, be) to New York before she moved there for her job.", "options": [{"letter": "A", "text": "had never been"}, {"letter": "B", "text": "never had been"}, {"letter": "C", "text": "was never"}, {"letter": "D", "text": "has never been"}]}, {"num": 85, "question": "Fill in the blanks. We __________ (not, see) such a beautiful sunset before.", "options": [{"letter": "A", "text": "has not seen"}, {"letter": "B", "text": "not had seen"}, {"letter": "C", "text": "have not seen"}, {"letter": "D", "text": "didn’t see"}]}, {"num": 86, "question": "Fill in the blanks. After he __________ (finish) his homework, he went to the gym.", "options": [{"letter": "A", "text": "had finished"}, {"letter": "B", "text": "finished"}, {"letter": "C", "text": "has finished"}, {"letter": "D", "text": "had finish"}]}, {"num": 87, "question": "Choose the correct option. By the time I arrived, the train __________.", "options": [{"letter": "A", "text": "has left"}, {"letter": "B", "text": "had left"}, {"letter": "C", "text": "had been leaving"}, {"letter": "D", "text": "leaves"}]}, {"num": 88, "question": "Choose the correct option. When I called him, he __________ his lunch.", "options": [{"letter": "A", "text": "had already eaten"}, {"letter": "B", "text": "eats"}, {"letter": "C", "text": "were eating"}, {"letter": "D", "text": "had been eating"}]}, {"num": 89, "question": "Choose the correct option.  She __________ the report by the time the meeting started.", "options": [{"letter": "A", "text": "had completed"}, {"letter": "B", "text": "completed"}, {"letter": "C", "text": "was completing"}, {"letter": "D", "text": "has completed"}]}, {"num": 90, "question": "Choose the correct option. He __________ (finish) his work before he left for the weekend.", "options": [{"letter": "A", "text": "had finished"}, {"letter": "B", "text": "had been finishing"}, {"letter": "C", "text": "finished"}, {"letter": "D", "text": "was finishing"}]}, {"num": 91, "question": "Choose the correct option. We __________ (already, do) all the preparations before the guests arrived.", "options": [{"letter": "A", "text": "have already done"}, {"letter": "B", "text": "had already done"}, {"letter": "C", "text": "already had done"}, {"letter": "D", "text": "did already do"}]}, {"num": 92, "question": "The cake __________ (make) by my grandmother every Sunday.", "options": [{"letter": "A", "text": "is made"}, {"letter": "B", "text": "is make"}, {"letter": "C", "text": "Makes"}, {"letter": "D", "text": "Made"}]}, {"num": 93, "question": "The letters __________ (deliver) at 10 AM every morning.", "options": [{"letter": "A", "text": "Deliver"}, {"letter": "B", "text": "are delivered"}, {"letter": "C", "text": "is delivered"}, {"letter": "D", "text": "were delivered"}]}, {"num": 94, "question": "My house __________ (clean) every Saturday.", "options": [{"letter": "A", "text": "is cleaned"}, {"letter": "B", "text": "are cleaned"}, {"letter": "C", "text": "Cleans"}, {"letter": "D", "text": "Cleaned"}]}, {"num": 95, "question": "The documents __________ (sign) by the manager yesterday.", "options": [{"letter": "A", "text": "are signed"}, {"letter": "B", "text": "is signed"}, {"letter": "C", "text": "Signed"}, {"letter": "D", "text": "were signed"}]}, {"num": 96, "question": "The meeting __________ (hold) every month.", "options": [{"letter": "A", "text": "is held"}, {"letter": "B", "text": "are held"}, {"letter": "C", "text": "Holds"}, {"letter": "D", "text": "held"}]}, {"num": 97, "question": "The house __________ (build) in 1990.", "options": [{"letter": "A", "text": "Built"}, {"letter": "B", "text": "was built"}, {"letter": "C", "text": "is built"}, {"letter": "D", "text": "has been built"}]}, {"num": 98, "question": "The book __________ (publish) last year.", "options": [{"letter": "A", "text": "Published"}, {"letter": "B", "text": "was published"}, {"letter": "C", "text": "has published"}, {"letter": "D", "text": "was publishing"}]}, {"num": 99, "question": "The report __________ (write) by John yesterday.", "options": [{"letter": "A", "text": "was written"}, {"letter": "B", "text": "is written"}, {"letter": "C", "text": "was wrote"}, {"letter": "D", "text": "Writes"}]}, {"num": 100, "question": "The cake __________ (eat) by the children before I arrived.", "options": [{"letter": "A", "text": "was eaten"}, {"letter": "B", "text": "Had been eaten"}, {"letter": "C", "text": "is eaten"}, {"letter": "D", "text": "were eaten"}]}, {"num": 101, "question": "The song __________ (perform) by the orchestra last night.", "options": [{"letter": "A", "text": "is performed"}, {"letter": "B", "text": "was performed"}, {"letter": "C", "text": "Performed"}, {"letter": "D", "text": "has been performed"}]}, {"num": 102, "question": "The cake __________ (bake) tomorrow by my mom.", "options": [{"letter": "A", "text": "will baked"}, {"letter": "B", "text": "will be baked"}, {"letter": "C", "text": "will bake"}, {"letter": "D", "text": "is baked"}]}, {"num": 103, "question": "The project __________ (finish) by next week.", "options": [{"letter": "A", "text": "will be finish"}, {"letter": "B", "text": "will be finished"}, {"letter": "C", "text": "will finishes"}, {"letter": "D", "text": "will finishing"}]}, {"num": 104, "question": "The house __________ (sell) in a few days", "options": [{"letter": "A", "text": "will sold"}, {"letter": "B", "text": "will be sold"}, {"letter": "C", "text": "will sell"}, {"letter": "D", "text": "is sold"}]}, {"num": 105, "question": "The book __________ (publish) next year.", "options": [{"letter": "A", "text": "will be published"}, {"letter": "B", "text": "will published"}, {"letter": "C", "text": "will be publish"}, {"letter": "D", "text": "is published"}]}, {"num": 106, "question": "The work __________ (complete) by the end of the day.", "options": [{"letter": "A", "text": "will be completed"}, {"letter": "B", "text": "will complete"}, {"letter": "C", "text": "is completed"}, {"letter": "D", "text": "will completing"}]}, {"num": 107, "question": "The book __________ (borrow) by many people last week.", "options": [{"letter": "A", "text": "was borrowed"}, {"letter": "B", "text": "were borrowed"}, {"letter": "C", "text": "has been borrowed"}, {"letter": "D", "text": "Borrowed"}]}, {"num": 108, "question": "Choose the correct option to complete the sentence. If it __________ tomorrow, we will not go to the beach.", "options": [{"letter": "A", "text": "Rains"}, {"letter": "B", "text": "will rain"}, {"letter": "C", "text": "Rain"}, {"letter": "D", "text": "Rained"}]}, {"num": 109, "question": "Choose the correct option to complete the sentence.", "options": [{"letter": "A", "text": "Have"}, {"letter": "B", "text": "will have"}, {"letter": "C", "text": "Had"}, {"letter": "D", "text": "Having"}]}, {"num": 110, "question": "Choose the correct option to complete the sentence.", "options": [{"letter": "A", "text": "Studies"}, {"letter": "B", "text": "Study"}, {"letter": "C", "text": "Studied"}, {"letter": "D", "text": "will study"}]}, {"num": 111, "question": "Choose the correct option to complete the sentence.", "options": [{"letter": "A", "text": "Listen"}, {"letter": "B", "text": "Listens"}, {"letter": "C", "text": "Listened"}, {"letter": "D", "text": "will listen"}]}, {"num": 112, "question": "Choose the correct option to complete the sentence.", "options": [{"letter": "A", "text": "Leave"}, {"letter": "B", "text": "will leave"}, {"letter": "C", "text": "Left"}, {"letter": "D", "text": "Leaving"}]}, {"num": 113, "question": "Choose the correct answer.", "options": [{"letter": "A", "text": "Have"}, {"letter": "B", "text": "will have"}, {"letter": "C", "text": "Had"}, {"letter": "D", "text": "Has"}]}, {"num": 114, "question": "Find the definition of Lonely?", "options": [{"letter": "A", "text": "Feeling isolated and alone"}, {"letter": "B", "text": "Feeling grateful and thankful"}, {"letter": "C", "text": "Feeling pleasure, joy, or deligh"}, {"letter": "D", "text": "Feeling the strong desire for something that another person has"}]}, {"num": 115, "question": "Choose the correct answer. If you __________ the instructions, you will understand how to do it.", "options": [{"letter": "A", "text": "Read"}, {"letter": "B", "text": "Reads"}, {"letter": "C", "text": "will read"}, {"letter": "D", "text": "Readed"}]}, {"num": 116, "question": "Choose the correct option to complete the sentence. If it __________ tomorrow, we will cancel the picnic.", "options": [{"letter": "A", "text": "Rains"}, {"letter": "B", "text": "will rain"}, {"letter": "C", "text": "Rain"}, {"letter": "D", "text": "Rained"}]}, {"num": 117, "question": "Choose the correct option to complete the sentence.", "options": [{"letter": "A", "text": "Am"}, {"letter": "B", "text": "will b"}, {"letter": "C", "text": "been"}, {"letter": "D", "text": "Were"}]}, {"num": 118, "question": "Choose the correct option to complete the sentence.", "options": [{"letter": "A", "text": "Open"}, {"letter": "B", "text": "Opened"}, {"letter": "C", "text": "will open"}, {"letter": "D", "text": "Opens"}]}, {"num": 119, "question": "Complete the sentence with the correct form.", "options": [{"letter": "A", "text": "study / will pass"}, {"letter": "B", "text": "studies / will pass"}, {"letter": "C", "text": "will study / passes"}, {"letter": "D", "text": "studies / passes"}]}, {"num": 120, "question": "Complete the sentence with the correct form.", "options": [{"letter": "A", "text": "don’t leave / will be"}, {"letter": "B", "text": "won’t leave / will be"}, {"letter": "C", "text": "doesn’t leave / is"}, {"letter": "D", "text": "didn’t leave / will be"}]}, {"num": 121, "question": "Complete the sentence with the correct form Conditional 1..", "options": [{"letter": "A", "text": "arrive / will help"}, {"letter": "B", "text": "will arrive / will help"}, {"letter": "C", "text": "arrives / will help"}, {"letter": "D", "text": "arriving / will helping"}]}, {"num": 122, "question": "Complete the sentence with the correct form.", "options": [{"letter": "A", "text": "got / would move"}, {"letter": "B", "text": "get / will move"}, {"letter": "C", "text": "gets / will move"}, {"letter": "D", "text": "will get / moves"}]}, {"num": 123, "question": "Find the definition of Sad?", "options": [{"letter": "A", "text": "Feeling grateful and thankful"}, {"letter": "B", "text": "Feeling sorrow, unhappiness, or dejection"}, {"letter": "C", "text": "Feeling satisfied and peaceful"}, {"letter": "D", "text": "Feeling pleasure, joy, or delight"}]}, {"num": 124, "question": "Find the definition of Grateful?", "options": [{"letter": "A", "text": "Feeling grateful and thankful"}, {"letter": "B", "text": "Feeling upset that something didn’t happen as expected"}, {"letter": "C", "text": "Feeling isolated and alone"}, {"letter": "D", "text": "Feeling sorrow, unhappiness, or dejection"}]}, {"num": 125, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "were/would played"}, {"letter": "B", "text": "were/would have played"}, {"letter": "C", "text": "were/will play"}, {"letter": "D", "text": "were/would play"}]}, {"num": 127, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "would study/got"}, {"letter": "B", "text": "would study/would get"}, {"letter": "C", "text": "studied/would get"}, {"letter": "D", "text": "study/would got"}]}, {"num": 128, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "would have/ hosted"}, {"letter": "B", "text": "had/would host"}, {"letter": "C", "text": "had/would hosted"}, {"letter": "D", "text": "would have/would host"}]}, {"num": 129, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "spoke/ would travelled"}, {"letter": "B", "text": "speak/ would travelled"}, {"letter": "C", "text": "would speak/would travel"}, {"letter": "D", "text": "spoke/would travel"}]}, {"num": 130, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "asked/gave"}, {"letter": "B", "text": "asked/will give"}, {"letter": "C", "text": "asked/would give"}, {"letter": "D", "text": "asked/would have given"}]}, {"num": 131, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "were/would reduce"}, {"letter": "B", "text": "were/ would have reduced"}, {"letter": "C", "text": "were/will reduce"}, {"letter": "D", "text": "were/reduced"}]}, {"num": 132, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "wouldn`t eat/ felt"}, {"letter": "B", "text": "ate/felt"}, {"letter": "C", "text": "ate/would have felt"}, {"letter": "D", "text": "Did not eat / would feel"}]}, {"num": 133, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "lived/ would have gone"}, {"letter": "B", "text": "lived/would go"}, {"letter": "C", "text": "live/ go"}, {"letter": "D", "text": "would live/would go"}]}, {"num": 134, "question": "Choose the correct form of the verb of Conditional 2.", "options": [{"letter": "A", "text": "knew/would make"}, {"letter": "B", "text": "would know/would make"}, {"letter": "C", "text": "knew/would have made"}, {"letter": "D", "text": "know/make"}]}, {"num": 135, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "had known/would help"}, {"letter": "B", "text": "knew/ would help"}, {"letter": "C", "text": "would know/would have helped"}, {"letter": "D", "text": "had known/would have helped"}]}, {"num": 136, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "had studied/would have passed"}, {"letter": "B", "text": "had studied/ would pass"}, {"letter": "C", "text": "studied/would pass"}, {"letter": "D", "text": "would study/ had passed"}]}, {"num": 137, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "hadn`t forgotten/would get"}, {"letter": "B", "text": "hadn`t forgotten/would got"}, {"letter": "C", "text": "hadn`t forgotten/wouldn`t have got"}, {"letter": "D", "text": "hadn`t forgotten/got"}]}, {"num": 138, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "had left/would have caught"}, {"letter": "B", "text": "would have left/had caught"}, {"letter": "C", "text": "had left/would caught"}, {"letter": "D", "text": "left/would catch"}]}, {"num": 139, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "hadn`t argued/would finish"}, {"letter": "B", "text": "would have argued/had finished"}, {"letter": "C", "text": "would argue/had finished"}, {"letter": "D", "text": "hadn`t argued/would have finished"}]}, {"num": 140, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "would have known/had visited"}, {"letter": "B", "text": "had known/would have visited"}, {"letter": "C", "text": "had knew/would visit"}, {"letter": "D", "text": "knew/visited"}]}, {"num": 141, "question": "Choose the correct form of the verb of Conditional 3.", "options": [{"letter": "A", "text": "asked/would give"}, {"letter": "B", "text": "asked/would have given"}, {"letter": "C", "text": "had asked/would have given"}, {"letter": "D", "text": "would have asked/ had given"}]}, {"num": 142, "question": "Choose the correct answer (Gerund vs. Infinitive)", "options": [{"letter": "A", "text": "Read"}, {"letter": "B", "text": "Reading"}, {"letter": "C", "text": "to reading"}, {"letter": "D", "text": "Reads"}]}, {"num": 143, "question": "Choose the correct infinitive to complete the sentence.", "options": [{"letter": "A", "text": "to eat"}, {"letter": "B", "text": "to sleep"}, {"letter": "C", "text": "to read"}, {"letter": "D", "text": "to travel"}]}, {"num": 144, "question": "Choose the correct infinitive to complete the sentence.", "options": [{"letter": "A", "text": "to solve"}, {"letter": "B", "text": "to help"}, {"letter": "C", "text": "to sleep"}, {"letter": "D", "text": "to walk"}]}, {"num": 145, "question": "Choose the correct answer. (Gerund vs. Infinitive)", "options": [{"letter": "A", "text": "to making"}, {"letter": "B", "text": "Making"}, {"letter": "C", "text": "Makes"}, {"letter": "D", "text": "Make"}]}, {"num": 146, "question": "Choose the correct form of the verb of Conditional 3", "options": [{"letter": "A", "text": "had studied / would have passed"}, {"letter": "B", "text": "studied / would pass"}, {"letter": "C", "text": "has studied / will pass"}, {"letter": "D", "text": "studies / would have passed"}]}, {"num": 147, "question": "Choose the correct form of the verb of Conditional 3", "options": [{"letter": "A", "text": "knew / will come"}, {"letter": "B", "text": "have known / would come"}, {"letter": "C", "text": "know / would have come"}, {"letter": "D", "text": "had known / would have come"}]}, {"num": 148, "question": "Choose the correct form of the verb of Conditional 2", "options": [{"letter": "A", "text": "had lived / would have gone"}, {"letter": "B", "text": "live / will go"}, {"letter": "C", "text": "lived / would go"}, {"letter": "D", "text": "lives / would go"}]}, {"num": 149, "question": "Choose the correct form of the verb of Conditional 2", "options": [{"letter": "A", "text": "were / would buy"}, {"letter": "B", "text": "are / will buy"}, {"letter": "C", "text": "had been / would have bought"}, {"letter": "D", "text": "is / would buy"}]}, {"num": 150, "question": "Choose the correct form of the verb of Conditional 2", "options": [{"letter": "A", "text": "live / will spend"}, {"letter": "B", "text": "lived / would spend"}, {"letter": "C", "text": "had lived / would have spent"}, {"letter": "D", "text": "lives / would spend"}]}, {"num": 151, "question": "Find the definition of Celebrity?", "options": [{"letter": "A", "text": "one of the awards given every year for the best film, best actress, best actor, etc. in the film industry"}, {"letter": "B", "text": "a poster, picture, short film or song, etc. that helps to sell a product"}, {"letter": "C", "text": "to suggest someone for an award"}, {"letter": "D", "text": "a famous person"}]}, {"num": 152, "question": "Find the definition of Innovation?", "options": [{"letter": "A", "text": "A new method, idea, or product."}, {"letter": "B", "text": "distinctive attribute of a gadget."}, {"letter": "C", "text": "The capability of a gadget to connect with other devices or the internet."}, {"letter": "D", "text": "A device, often electrical, used in homes for specific tasks (e.g., washing machine)"}]}, {"num": 153, "question": "Find the definition of Update?", "options": [{"letter": "A", "text": "To solve problems with a device or system."}, {"letter": "B", "text": "To bring a device or software to a newer version"}, {"letter": "C", "text": "To play media directly from the internet without downloading."}, {"letter": "D", "text": "To provide power to a device's battery."}]}, {"num": 154, "question": "Find the definition of Charge?", "options": [{"letter": "A", "text": "To solve problems with a device or system."}, {"letter": "B", "text": "To bring a device or software to a newer version"}, {"letter": "C", "text": "To provide power to a device's battery."}, {"letter": "D", "text": "To play media directly from the internet without downloading."}]}, {"num": 155, "question": "Find the definition of Stream?", "options": [{"letter": "A", "text": "To bring a device or software to a newer version"}, {"letter": "B", "text": "To provide power to a device's battery."}, {"letter": "C", "text": "To access a system or device in an unauthorized way"}, {"letter": "D", "text": "To play media directly from the internet without downloading."}]}, {"num": 156, "question": "Find the definition of Hack?", "options": [{"letter": "A", "text": "To access a system or device in an unauthorized way"}, {"letter": "B", "text": "To play media directly from the internet without downloading"}, {"letter": "C", "text": "To provide power to a device's battery."}, {"letter": "D", "text": "To bring a device or software to a newer version"}]}, {"num": 157, "question": "Find the definition of Reboot?", "options": [{"letter": "A", "text": "To access a system or device in an unauthorized way."}, {"letter": "B", "text": "To restart a device."}, {"letter": "C", "text": "To provide power to a device's battery."}, {"letter": "D", "text": "To play media directly from the internet without downloading"}]}, {"num": 158, "question": "Find the definition of Sync?", "options": [{"letter": "A", "text": "To provide power to a device's battery."}, {"letter": "B", "text": "To play media directly from the internet without downloading"}, {"letter": "C", "text": "To synchronize devices or data for consistency"}, {"letter": "D", "text": "To access a system or device in an unauthorized way."}]}, {"num": 159, "question": "Find the definition of Troubleshoot?", "options": [{"letter": "A", "text": "To restart a device."}, {"letter": "B", "text": "To access a system or device in an unauthorized way."}, {"letter": "C", "text": "To provide power to a device's battery."}, {"letter": "D", "text": "To solve problems with a device or system."}]}, {"num": 160, "question": "Find the definition of Accessory?", "options": [{"letter": "A", "text": "An additional item that enhances the functionality of a gadget."}, {"letter": "B", "text": "A new method, idea, or product."}, {"letter": "C", "text": "A device, often electrical, used in homes for specific tasks (e.g., washing machine)."}, {"letter": "D", "text": "The application of scientific knowledge for practical purposes."}]}, {"num": 161, "question": "Find the definition of Optimize?", "options": [{"letter": "A", "text": "A new method, idea, or product"}, {"letter": "B", "text": "To make a device or system perform better"}, {"letter": "C", "text": "To provide power to a device's battery."}, {"letter": "D", "text": "To play media directly from the internet without downloading"}]}, {"num": 162, "question": "Find the definition of Artificial Intelligence (AI)", "options": [{"letter": "A", "text": "The ability of AI systems to identify patterns or regularities in data."}, {"letter": "B", "text": "Technology that allows machines to perform tasks that usually require human intelligence, like problem-solving or understanding language."}, {"letter": "C", "text": "A type of machine learning model designed to work like the human brain, helping AI understand complex information."}, {"letter": "D", "text": "A field of AI that enables machines to understand and process images or videos."}]}, {"num": 163, "question": "Find the definition of Automation", "options": [{"letter": "A", "text": "Using machines or technology to do work without human help, often through AI."}, {"letter": "B", "text": "The technology that allows AI systems to understand spoken language."}, {"letter": "C", "text": "A collection of data used to train AI systems or machine learning models."}, {"letter": "D", "text": "A mathematical model trained to solve a specific problem using data."}]}, {"num": 164, "question": "Find the definition of Self-driving Car", "options": [{"letter": "A", "text": "The process of teaching an AI system or model by feeding it data so it can learn to make decisions or predictions."}, {"letter": "B", "text": "A mathematical model trained to solve a specific problem using data."}, {"letter": "C", "text": "The ability to think, understand, and learn from experience—something AI aims to mimic."}, {"letter": "D", "text": "A car that uses AI to drive without a human driver."}]}, {"num": 165, "question": "Find the definition of Computer Vision", "options": [{"letter": "A", "text": "The study of how to collect, analyze, and use data to make decisions, often using AI."}, {"letter": "B", "text": "A field of AI that enables machines to understand and process images or videos."}, {"letter": "C", "text": "Information about a system’s performance that is used to improve the AI or model."}, {"letter": "D", "text": "The technology that allows AI systems to understand spoken language."}]}, {"num": 166, "question": "What is artificial intelligence?", "options": [{"letter": "A", "text": "The ability of machines to perform tasks that require human intelligence"}, {"letter": "B", "text": "A type of software"}, {"letter": "C", "text": "A programming language"}, {"letter": "D", "text": "A hardware component"}]}, {"num": 167, "question": "What is a common method used in AI development?", "options": [{"letter": "A", "text": "Data mining"}, {"letter": "B", "text": "Cloud computing"}, {"letter": "C", "text": "Machine learning"}, {"letter": "D", "text": "Basic programming"}]}, {"num": 168, "question": "In which industry is AI significantly impacting?", "options": [{"letter": "A", "text": "Agriculture"}, {"letter": "B", "text": "Education"}, {"letter": "C", "text": "Healthcare"}, {"letter": "D", "text": "All of the above"}]}, {"num": 169, "question": "What is a potential concern related to AI?", "options": [{"letter": "A", "text": "Improved efficiency"}, {"letter": "B", "text": "Job loss and privacy concerns"}, {"letter": "C", "text": "Greater accuracy"}, {"letter": "D", "text": "Enhanced creativity"}]}, {"num": 170, "question": "What can AI do in financial services?", "options": [{"letter": "A", "text": "Predict stock prices"}, {"letter": "B", "text": "Detect fraudulent transactions"}, {"letter": "C", "text": "Process loans"}, {"letter": "D", "text": "All of the above"}]}, {"num": 171, "question": "Find the definition of AI Model", "options": [{"letter": "A", "text": "A mathematical model trained to solve a specific problem using data."}, {"letter": "B", "text": "The study of how to collect, analyze, and use data to make decisions, often using        AI."}, {"letter": "C", "text": "The ability of AI to identify things like objects, faces, or speech from data."}, {"letter": "D", "text": "A car that uses AI to drive without a human driver."}]}, {"num": 172, "question": "“I have already finished my homework, “ said Lisa", "options": [{"letter": "A", "text": "already finished"}, {"letter": "B", "text": "has already finished"}, {"letter": "C", "text": "had already finished"}, {"letter": "D", "text": "already finish"}]}, {"num": 173, "question": "“We won the game yesterday,” said the team captain.", "options": [{"letter": "A", "text": "The team captain said that they won the game yesterday"}, {"letter": "B", "text": "The team captain said that they had won the game the day before"}, {"letter": "C", "text": "The team captain said that they would won the game yesterday"}, {"letter": "D", "text": "The team captain says that they won the game yesterday"}]}, {"num": 174, "question": "“I am studying English at the moment “, said Mark", "options": [{"letter": "A", "text": "I was studying"}, {"letter": "B", "text": "he was studying"}, {"letter": "C", "text": "he would studying"}, {"letter": "D", "text": "he had studying"}]}, {"num": 175, "question": "“What time does the train arrive? Asked Emily", "options": [{"letter": "A", "text": "train arrives"}, {"letter": "B", "text": "train would arrive"}, {"letter": "C", "text": "train arrived"}, {"letter": "D", "text": "train arriving"}]}, {"num": 176, "question": "“Clean your room,” said Lisa", "options": [{"letter": "A", "text": "that I clean my"}, {"letter": "B", "text": "me cleaning your"}, {"letter": "C", "text": "me to clean my"}, {"letter": "D", "text": "me to clean me"}]}, {"num": 177, "question": "“I can help you with your homework”, said Jack.", "options": [{"letter": "A", "text": "Jack said that he can help me with my homework"}, {"letter": "B", "text": "Jack said that he would can help me with my homework"}, {"letter": "C", "text": "Jack said that he could help me with my homework"}, {"letter": "D", "text": "Jack said that he will help me with my homework"}]}, {"num": 178, "question": "\"Where are you going?\" he asked.", "options": [{"letter": "A", "text": "He asked where I was going."}, {"letter": "B", "text": "He asked where I am going."}, {"letter": "C", "text": "He asked where was I going."}, {"letter": "D", "text": "He asked where I go."}]}, {"num": 179, "question": "” I will visit my grandparents next week” ,said Tom.", "options": [{"letter": "A", "text": "Tom said that he will visit his grandparents next  week"}, {"letter": "B", "text": "Tom said that he would visit his grandparents the following week"}, {"letter": "C", "text": "Tom says that he will visit his grandparents next  week"}, {"letter": "D", "text": "Tom says that he would visit his grandparents next  week"}]}, {"num": 180, "question": "“We are coming , said Bekhzod", "options": [{"letter": "A", "text": "Bekhzod said that they were coming"}, {"letter": "B", "text": "Bekhzod said that he is coming"}, {"letter": "C", "text": "Bekzod says that he comes"}, {"letter": "D", "text": "Bekhzod said that they are coming"}]}, {"num": 181, "question": "“I went to the gym’’ said Aygul", "options": [{"letter": "A", "text": "Aygul said that she had gone to the gym"}, {"letter": "B", "text": "Aygul said that she went to the gym"}, {"letter": "C", "text": "Aygul says that she goes to the gym"}, {"letter": "D", "text": "Aygul said that she gone to the gym"}]}, {"num": 182, "question": "Find the definition of Freelancer", "options": [{"letter": "A", "text": "The time by which a project or task must be completed."}, {"letter": "B", "text": "A written agreement between a freelancer and a client that outlines the work terms, payment, and deadlines."}, {"letter": "C", "text": "A person who works independently for different clients."}, {"letter": "D", "text": "A collection of a freelancer’s past work that showcases their skills and experience."}]}, {"num": 183, "question": "Find the definition of Client", "options": [{"letter": "A", "text": "A person or company that hires a freelancer for a specific job."}, {"letter": "B", "text": "The amount of money a freelancer charges for their work, measured per hour, day, or project."}, {"letter": "C", "text": "Another term for a freelancer, emphasizing they work on a contract basis."}, {"letter": "D", "text": "The process of sending a bill to a client for the work done."}]}, {"num": 184, "question": "Find the definition of  Contract", "options": [{"letter": "A", "text": "The time by which a project or task must be completed."}, {"letter": "B", "text": "A written agreement between a freelancer and a client that outlines the work terms, payment, and deadlines."}, {"letter": "C", "text": "The process of sending a bill to a client for the work done."}, {"letter": "D", "text": "Another term for a freelancer, emphasizing they work on a contract basis."}]}, {"num": 185, "question": "Find the definition of  Independent contractor", "options": [{"letter": "A", "text": "A proposal from a client to hire a freelancer for a specific task."}, {"letter": "B", "text": "The ability to organize and plan how much time is spent on different tasks."}, {"letter": "C", "text": "The ability to balance work responsibilities with personal life."}, {"letter": "D", "text": "Another term for a freelancer, emphasizing they work on a contract basis."}]}, {"num": 186, "question": "Find the definition of  Project", "options": [{"letter": "A", "text": "A task or set of tasks that a freelancer is hired to complete."}, {"letter": "B", "text": "A proposal from a client to hire a freelancer for a specific task."}, {"letter": "C", "text": "Another term for a freelancer, emphasizing they work on a contract basis."}, {"letter": "D", "text": "The ability to organize and plan how much time is spent on different tasks."}]}, {"num": 187, "question": "Find the definition of  Rate", "options": [{"letter": "A", "text": "The ability to choose working hours or work from different locations."}, {"letter": "B", "text": "The amount of money a freelancer charges for their work, measured per hour, day, or project."}, {"letter": "C", "text": "The ability to organize and plan how much time is spent on different tasks."}, {"letter": "D", "text": "A person or company that hires a freelancer for a specific job."}]}, {"num": 188, "question": "Find the definition of  Deadline", "options": [{"letter": "A", "text": "A task or set of tasks that a freelancer is hired to complete."}, {"letter": "B", "text": "A proposal from a client to hire a freelancer for a specific task."}, {"letter": "C", "text": "The time by which a project or task must be completed."}, {"letter": "D", "text": "A person or company that hires a freelancer for a specific job."}]}, {"num": 189, "question": "Find the definition of  Self-employed", "options": [{"letter": "A", "text": "A person who works for themselves and is not employed by a company."}, {"letter": "B", "text": "A person or company that hires a freelancer for a specific job."}, {"letter": "C", "text": "A task or set of tasks that a freelancer is hired to complete."}, {"letter": "D", "text": "The ability to choose working hours or work from different locations."}]}, {"num": 190, "question": "Find the definition of  Job offer", "options": [{"letter": "A", "text": "A written agreement between a freelancer and a client that outlines the work terms, payment, and deadlines."}, {"letter": "B", "text": "A person or company that hires a freelancer for a specific job."}, {"letter": "C", "text": "A proposal from a client to hire a freelancer for a specific task."}, {"letter": "D", "text": "Another term for a freelancer, emphasizing they work on a contract basis."}]}, {"num": 191, "question": "Find the definition of  Payment", "options": [{"letter": "A", "text": "The ability to organize and plan how much time is spent on different tasks."}, {"letter": "B", "text": "The money a freelancer receives in exchange for their work."}, {"letter": "C", "text": "Websites where freelancers can find job opportunities and clients."}, {"letter": "D", "text": "A proposal or suggestion made by a freelancer to a client, offering services for a job."}]}, {"num": 192, "question": "\"I will finish the project by tomorrow,\" he said.", "options": [{"letter": "A", "text": "He said that he will finish the project by the following day.."}, {"letter": "B", "text": "He said that he finishes the project by the following day.."}, {"letter": "C", "text": "He said that he would finish the project by the following day.."}, {"letter": "D", "text": "He said that he finished the project by the following day.."}]}, {"num": 193, "question": "\"We are watching a movie,\" they said.", "options": [{"letter": "A", "text": "They said that they were watching a movie."}, {"letter": "B", "text": "They said that they had watched a movie."}, {"letter": "C", "text": "They said that they watched a movie."}, {"letter": "D", "text": "They said that they have watched a movie."}]}, {"num": 194, "question": "\"Don't forget to call me when you arrive,\" she said.", "options": [{"letter": "A", "text": "She told me not to forget to call her when I arrived."}, {"letter": "B", "text": "She told me to not forget to call her when I arrive."}, {"letter": "C", "text": "She said to not forget to call her when I arrive."}, {"letter": "D", "text": "She reminded me not to forget to call her when I arrived."}]}, {"num": 195, "question": "\"How long have you been working here?\" he asked.", "options": [{"letter": "A", "text": "He asked how long I had been working there."}, {"letter": "B", "text": "He asked how long I have been working there."}, {"letter": "C", "text": "He asked how long had I been working there."}, {"letter": "D", "text": "He asked how long I was working there."}]}, {"num": 196, "question": "\"I will be working from home tomorrow,\" she said.", "options": [{"letter": "A", "text": "She said that she will be working from home the following day."}, {"letter": "B", "text": "She said that she would be working from home the following day."}, {"letter": "C", "text": "She said that she worked from home the following day."}, {"letter": "D", "text": "She said that she will work from home the following day."}]}, {"num": 197, "question": "Find the definition of  Title Page", "options": [{"letter": "A", "text": "A list of the report’s sections and page numbers."}, {"letter": "B", "text": "The title of the report, your name, and the date."}, {"letter": "C", "text": "A brief overview of the report’s main points and conclusions (written last, but placed at the beginning)."}, {"letter": "D", "text": "Describe the methods or processes you used to gather information or conduct research."}]}, {"num": 198, "question": "Find the definition of  Table of Contents", "options": [{"letter": "A", "text": "A list of the report’s sections and page numbers."}, {"letter": "B", "text": "A brief overview of the report’s main points and conclusions (written last, but placed at the beginning)."}, {"letter": "C", "text": "Introduce the topic, state the purpose of the report, and outline what will be covered"}, {"letter": "D", "text": "Describe the methods or processes you used to gather information or conduct research."}]}, {"num": 199, "question": "Find the definition of  Introduction", "options": [{"letter": "A", "text": "A brief overview of the report’s main points and conclusions (written last, but placed at the beginning)."}, {"letter": "B", "text": "A list of the report’s sections and page numbers."}, {"letter": "C", "text": "Introduce the topic, state the purpose of the report, and outline what will be covered"}, {"letter": "D", "text": "Describe the methods or processes you used to gather information or conduct research."}]}, {"num": 200, "question": "Find the definition of  Executive Summary.", "options": [{"letter": "A", "text": "A brief overview of the report’s main points and conclusions (written last, but placed at the beginning)."}, {"letter": "B", "text": "Introduce the topic, state the purpose of the report, and outline what will be covered"}, {"letter": "C", "text": "Describe the methods or processes you used to gather information or conduct research."}, {"letter": "D", "text": "A list of the report’s sections and page numbers."}]}];
+
+let questions = [];
+let currentIdx = 0;
+let answers = {}; // {idx: 'A'/'B'/'C'/'D'}
+let score = 0;
+let quizMode = 'all';
+let feedbackMode = 'instant';
+let reviewMode = false;
+
+function setMode(mode, btn) {
+  quizMode = mode;
+  btn.closest('.mode-buttons').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFeedback(mode, btn) {
+  feedbackMode = mode;
+  btn.closest('.mode-buttons').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function startQuiz(qs) {
+  if (qs) {
+    questions = qs;
+  } else {
+    if (quizMode === 'all') questions = [...ALL_QUESTIONS];
+    else if (quizMode === 'random50') questions = shuffle(ALL_QUESTIONS).slice(0, 50);
+    else questions = shuffle(ALL_QUESTIONS).slice(0, 20);
+  }
+
+  currentIdx = 0;
+  answers = {};
+  score = 0;
+  reviewMode = false;
+
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  document.getElementById('qtotal').textContent = questions.length;
+
+  buildNavGrid();
+  renderQuestion();
+}
+
+function buildNavGrid() {
+  const grid = document.getElementById('q-nav-grid');
+  grid.innerHTML = '';
+  questions.forEach((q, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'q-dot';
+    dot.id = `qdot-${i}`;
+    dot.textContent = i + 1;
+    dot.onclick = () => jumpTo(i);
+    grid.appendChild(dot);
+  });
+}
+
+function jumpTo(idx) {
+  currentIdx = idx;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentIdx];
+  const total = questions.length;
+
+  document.getElementById('qcurrent').textContent = currentIdx + 1;
+  document.getElementById('progress-fill').style.width = ((currentIdx + 1) / total * 100) + '%';
+  document.getElementById('score-display').textContent = `Score: ${score}`;
+  document.getElementById('q-label').textContent = `Question ${currentIdx + 1}`;
+  document.getElementById('q-text').textContent = q.question;
+
+  // Update nav dots
+  document.querySelectorAll('.q-dot').forEach((d, i) => {
+    d.classList.remove('current', 'answered', 'correct-dot', 'wrong-dot');
+    if (i === currentIdx) {
+      d.classList.add('current');
+    } else if (answers[i] !== undefined) {
+      if (feedbackMode === 'instant' && q.correct) {
+        d.classList.add(answers[i] === questions[i].correct ? 'correct-dot' : 'wrong-dot');
+      } else {
+        d.classList.add('answered');
+      }
+    }
+  });
+
+  // Render options
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  const userAnswer = answers[currentIdx];
+  const alreadyAnswered = userAnswer !== undefined;
+
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.disabled = alreadyAnswered;
+
+    let cls = '';
+    if (alreadyAnswered) {
+      if (opt.letter === userAnswer) {
+        cls = (userAnswer === q.correct) ? 'correct' : 'wrong';
+      } else if (feedbackMode === 'instant' && opt.letter === q.correct) {
+        cls = 'correct';
+      }
+    }
+    if (cls) btn.classList.add(cls);
+
+    btn.innerHTML = `<span class="option-letter">${opt.letter}</span><span>${opt.text}</span>`;
+    btn.onclick = () => selectAnswer(opt.letter);
+    grid.appendChild(btn);
+  });
+
+  // Feedback toast
+  const toast = document.getElementById('feedback-toast');
+  toast.className = 'feedback-toast';
+  if (alreadyAnswered && feedbackMode === 'instant' && q.correct) {
+    if (userAnswer === q.correct) {
+      toast.className = 'feedback-toast correct-fb';
+      toast.textContent = '✓ Correct!';
+    } else {
+      toast.className = 'feedback-toast wrong-fb';
+      toast.textContent = `✗ Wrong! Correct answer: ${q.correct}`;
+    }
+  }
+
+  // Nav buttons
+  document.getElementById('prev-btn').disabled = currentIdx === 0;
+  document.getElementById('next-btn').disabled = !alreadyAnswered;
+
+  // If last question and answered
+  if (currentIdx === total - 1 && alreadyAnswered) {
+    document.getElementById('next-btn').textContent = 'Finish →';
+    document.getElementById('next-btn').onclick = showResults;
+  } else {
+    document.getElementById('next-btn').textContent = 'Next →';
+    document.getElementById('next-btn').onclick = () => navigate(1);
+  }
+
+  // Scroll nav dot into view
+  const dot = document.getElementById(`qdot-${currentIdx}`);
+  if (dot) dot.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+
+function selectAnswer(letter) {
+  const q = questions[currentIdx];
+  const wasCorrect = letter === q.correct;
+
+  if (wasCorrect) score++;
+  answers[currentIdx] = letter;
+
+  document.getElementById('next-btn').disabled = false;
+
+  // Auto-advance to next question for better UX (slight delay)
+  renderQuestion();
+
+  if (currentIdx < questions.length - 1) {
+    setTimeout(() => {
+      navigate(1);
+    }, feedbackMode === 'instant' ? 900 : 400);
+  }
+}
+
+function navigate(dir) {
+  const newIdx = currentIdx + dir;
+  if (newIdx >= 0 && newIdx < questions.length) {
+    currentIdx = newIdx;
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  const total = questions.length;
+  const answered = Object.keys(answers).length;
+  const correct = Object.values(answers).filter((a, i) => a === questions[i]?.correct).length;
+  const wrong = answered - correct;
+  const skipped = total - answered;
+  const pct = Math.round(correct / total * 100);
+
+  document.getElementById('quiz-screen').style.display = 'none';
+  const rs = document.getElementById('results-screen');
+  rs.style.display = 'flex';
+
+  document.getElementById('final-pct').textContent = pct + '%';
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-skipped').textContent = skipped;
+
+  // Titles
+  let title = pct >= 90 ? '🏆 Excellent!' : pct >= 70 ? '🎉 Good Job!' : pct >= 50 ? '📚 Keep Practicing' : '💪 Study More';
+  document.getElementById('results-title').textContent = title;
+  document.getElementById('results-sub').textContent = `You answered ${answered} of ${total} questions. ${correct} correct, ${wrong} wrong.`;
+
+  // Animate circle
+  const circumference = 364.4;
+  const offset = circumference - (pct / 100 * circumference);
+  setTimeout(() => {
+    document.getElementById('score-circle').style.transition = 'stroke-dashoffset 1.2s ease';
+    document.getElementById('score-circle').style.strokeDashoffset = offset;
+  }, 200);
+}
+
+function restartQuiz() {
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('start-screen').style.display = 'flex';
+}
+
+function reviewWrong() {
+  const wrongQs = questions.filter((q, i) => answers[i] && answers[i] !== q.correct);
+  if (wrongQs.length === 0) {
+    alert('🎉 No wrong answers to review!');
+    return;
+  }
+  feedbackMode = 'instant';
+  startQuiz(wrongQs);
+}
+</script>
+</body>
+</html>
